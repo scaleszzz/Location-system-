@@ -1,7 +1,6 @@
 package locationsystem.LocationSystems.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,8 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "t_user")
-public class User {
+@Table(name = "t_location")
+public class Location {
 
     @Id
     @Column(name = "id")
@@ -23,13 +22,6 @@ public class User {
     @Column(name = "name")
     private String name;
 
-    @NotNull
-    @Email
-    @Column(name = "email")
-    private String email;
-
-    @NotNull
-    @Column(name = "password")
-    private String password;
+    private Long ownerId;
 
 }
