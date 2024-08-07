@@ -10,6 +10,9 @@ import locationsystem.LocationSystems.repository.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -18,7 +21,7 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final LocationAccessRepository locationAccessRepository;
 
-    public Location createLocation(String name, String address, User owner){
+    public Location createLocation(String name, String address, User owner) {
         Location location = new Location();
         location.setName(name);
         location.setAddress(address);
@@ -26,12 +29,32 @@ public class LocationService {
         return locationRepository.save(location);
     }
 
-    public void shareLocation(Long locationId, User user, AccessType accessType){
-        Location location = locationRepository.findById(locationId).orElse(null);
+    public boolean shareLocation(Long locationId, User friend, AccessType accessType) {
+        Optional<Location> optionalLocation = locationRepository.findById(locationId);
+        if (optionalLocation.isEmpty()) {
+            return false;
+        }
+        Location location = optionalLocation.get();
+
+        Optional<LocationAccess> existingAccess = locationAccessRepository.findByLocationAndUser(location, friend);
+        if (existingAccess.isPresent()) {
+            return false;
+        }
+
         LocationAccess locationAccess = new LocationAccess();
         locationAccess.setLocation(location);
-        locationAccess.setUser(user);
+        locationAccess.setUser(friend);
         locationAccess.setAccessType(accessType);
+
         locationAccessRepository.save(locationAccess);
+        return true;
+    }
+
+    public Optional<Location> getLocationById(Long locationId) {
+        return locationRepository.findById(locationId);
+    }
+
+    public List<Location> getAllLocations() {
+        return locationRepository.findAll();
     }
 }
