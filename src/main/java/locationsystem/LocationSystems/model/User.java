@@ -31,9 +31,6 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @NotNull
-    @Column(name = "password")
-    private String password;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<Location> locations = new HashSet<>();
