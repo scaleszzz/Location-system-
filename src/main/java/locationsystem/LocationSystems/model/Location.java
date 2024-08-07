@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -22,6 +25,15 @@ public class Location {
     @Column(name = "name")
     private String name;
 
-    private Long ownerId;
+    @NotNull
+    @Column(name = "address", nullable = false)
+    private String address;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
+
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
+    private Set<LocationAccess> accessList = new HashSet<>();
 
 }
